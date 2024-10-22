@@ -1,1 +1,1 @@
-# WGS_simple_script_for_ComputeCanada
+# WGS_Bscript
