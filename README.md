@@ -26,7 +26,7 @@ flowchart TD
   
 2. ***Collect or make your own primer file (it should be '.fa' or '.fasta' file) and get its pathway***
   
-3. ***Modified bash scrip***
+3. ***Modified bash script***
   
   Download the wgs_bscript. Then change the head of this job (You might need to change the time, memory and node depending on the number of sequences. But you need at least 150G for SPAdes, or you can change the setting in SPAdes)
   
@@ -54,10 +54,10 @@ flowchart TD
   path=/path/to/your/working/directory/
   ```
   
-  Add Nextera.fa in your working directory
+  Define your primer path and file.
   
   ```
-  primer_path=/home/tiff08/scratch/github_script_test/primers.fa
+  primer_path=/path/to/your/primer/yourprimerfilename.fa
   ```
   
   If your sequence does not end with " _R1_001.fastq.gz" or " _R2_001.fastq.gz", you also need to change the tag and format:
