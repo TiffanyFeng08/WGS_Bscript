@@ -2,7 +2,7 @@
 
 **Simple script for bacterial whole genome sequences analysis**
 
-This bash script is prepared for whole genome sequencing data analysis on the Compute Canada server. The target is to use only the tools in the Compute Canada module without installing extra libraries or tools and create a simple workflow for paired-end short-read sequence analysis, including QC, trimming, assembly, and annotation. The test was conducted in the Compute Canada Beluga Server.
+This bash script is prepared for whole genome sequencing data analysis on the Compute Canada server. The target is to use only the tools in the Compute Canada module without installing extra libraries or tools and create a simple workflow for paired-end short-read sequence analysis, including QC, trimming, assembly, and annotation. The test was conducted in the Compute Canada Beluga Cluster. (The head of the scripts might be differ from different cluster, e.g. Niagara Cluster)
 
 ---
 
@@ -79,6 +79,14 @@ flowchart TD
     
   3. ***In this script, you should change all the parameters of the tools based on your needs.***
 
+  ---
+### Usage:
+If you wan
+To run the pipeline on Compute Canada, execute the following:
+
+```
+sbatch WGS_Bscript
+```
 
 ### Directory Structure and Results:
 
