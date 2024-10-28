@@ -94,7 +94,7 @@ sbatch WGS_Bscript
   
   - **FastQC Results**: Quality control reports for raw reads.
     - `$path/QC/Rawreads/FastQC_result`: Contains FastQC reports for raw reads.
-    - `$path/QC/Rawreads/Multiqc_report`: Contains a MultiQC report summarizing the FastQC results.
+
 2. **Trimmed Reads**:
   
   - **Trimmed Paired-End Reads**: Trimmed paired-end reads after adapter removal and quality trimming.
@@ -104,20 +104,23 @@ sbatch WGS_Bscript
   
   - **FastQC Results**: Quality control reports for trimmed reads.
     - `$path/QC/TrimQC_result`: Contains FastQC reports for trimmed reads.
-    - `$path/QC/multiqc_report/TrimQC`: Contains a MultiQC report summarizing the FastQC results.
+      
 4. **SPAdes Assembly**:
   
   - **Assembly Results**: Assembled contigs from SPAdes.
     - `$path/SPAdes/result`: Contains SPAdes assembly results for each sample.
     - `$path/SPAdes/all_contigs`: Contains all contigs from the SPAdes assembly.
+      
 5. **Quality Assessment of Contigs**:
   
   - **Quast Results**: Quality assessment of assembled contigs using Quast.
     - `$path/QC/Assembly/Quast/Contigs`: Contains Quast reports for the assembled contigs.
+      
 6. **Filtered Contigs**:
   
   - **Filtered Contigs**: Contigs filtered to remove those shorter than 1kb.
     - `$path/Assembly/Filtered_Contigs`: Contains filtered contigs for each sample.
+      
 7. **Quality Assessment of Filtered Contigs**:
   
   - **Quast Results**: Quality assessment of filtered contigs using Quast.
@@ -128,6 +131,7 @@ sbatch WGS_Bscript
     - `$path/QC/Assembly/BBmap`: Contains BAM files and pileup reports for each sample.
     - `$path/QC/Assembly/BBmap/pileup_reports`: Contains individual pileup reports.
     - `$path/QC/Assembly/BBmap/pileup_reports/pileup_summary.txt`: Combined summary of all pileup reports.
+      
 9. **Annotation**:
   
   - **Prokka Results**: Annotation results using Prokka.
@@ -137,7 +141,6 @@ sbatch WGS_Bscript
 ### Expected Output Files:
 
 - **FastQC Reports**: `.html` and `.zip` files for each raw and trimmed read.
-- **MultiQC Reports**: `.html` and `.zip` files summarizing FastQC results.
 - **Trimmed Reads**: `.fastq.gz` files for paired and unpaired trimmed reads.
 - **SPAdes Assembly**: `contigs.fasta` files for each sample.
 - **Quast Reports**: `.html` and other summary files for contig quality assessment.
