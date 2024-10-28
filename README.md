@@ -81,8 +81,16 @@ flowchart TD
 
   ---
 ### Usage:
-If you wan
-To run the pipeline on Compute Canada, execute the following:
+You can directly upload the modified script, or;
+Use the "nano" command to create your script and directly paste the commands in the script:
+
+```
+# Go to the working directory or anydirectory you want to put your script
+nano WGS_Bscript
+# After creating the script, copy and paste your modified script and save it with "CTRL + o".
+```
+
+If you want to run the pipeline on Compute Canada, execute the following:
 
 ```
 sbatch WGS_Bscript
