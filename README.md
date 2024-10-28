@@ -79,4 +79,4 @@ flowchart TD
     
   2. ***In this script, you should change all the parameters of the tools based on your needs.***
     
-  3. ***All the quality control results in each step were put in the QC folder.***
+  3. ***All the quality control results will be put in QC folder.***
