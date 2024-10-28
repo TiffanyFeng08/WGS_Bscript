@@ -1,19 +1,34 @@
-# WGS_Bscript
-# Simple script for whole genome sequence
+***WGS_Bscript***
+
+---
+
+**Simple script for bacterial whole genome sequences analysis**
 
 This bash script is prepared for whole genome sequencing data analysis on the Compute Canada server. The target is to use only the tools in the Compute Canada module without installing extra libraries or tools and create a simple workflow for paired-end short-read sequence analysis, including QC, trimming, assembly, and annotation. The test was conducted in the Compute Canada Beluga Server.
 
+---
+
 **Workflow**
+
+```mermaid
+%%{ init: { 'flowchart': { 'curve': 'stepAfter' } } }%%
+flowchart TD
+     
+     A[Raw Reads] -- Trimmomatic --> B[Trimmed Reads] -- SPAdes assembler --> C[Assembly Contigs]--Filter contigs < 1kb-->F[Filtered Contigs]-- Prokka annotation --> D[Annotated Genome]
+     
+```
+
+---
 
 **Preparation:**
 
-1. ***Create a directory and get its pathway.***
+1. ***Create a directory to put your results and get its pathway.***
   
 2. ***Collect or make your own primer file (it should be '.fa' or '.fasta' file) and get its pathway***
   
 3. ***Modified bash scrip***
   
-  Download the wgs_bscript. Then change the head of this job (You might need to change the time, memory and node depending on the number of sequences)
+  Download the wgs_bscript. Then change the head of this job (You might need to change the time, memory and node depending on the number of sequences. But you need at least 150G for SPAdes, or you can change the setting in SPAdes)
   
   ```
   #!/bin/bash
@@ -27,7 +42,7 @@ This bash script is prepared for whole genome sequencing data analysis on the Co
   #SBATCH -n 2
   ```
   
-  Provide the raw sequences data directory
+  Provide the raw data directory
   
   ```
   raw_data_path=/path/to/your/raw/data
@@ -45,10 +60,23 @@ This bash script is prepared for whole genome sequencing data analysis on the Co
   primer_path=/home/tiff08/scratch/github_script_test/primers.fa
   ```
   
+  If your sequence does not end with " _R1_001.fastq.gz" or " _R2_001.fastq.gz", you also need to change the tag and format:
+  
+  ```
+  #Define the tag of your sequence
+  tag1="_R1_001"
+  tag2="_R2_001"
+  
+  #Define the format of your sequence
+  fo=fastq.gz
+  ```
+  
+  ---
+  
   **Notes**
   
-  1. ***In this script, it will recognize the "_R1_001.fastq.gz" and "_R2_001.fastq.gz" as the end of raw reads. And keep all the names in front. If this is not your case, please change lines 50, 51, and 52 to your desired format.***
+  1. ***In this script, you can change all the versions of your tools from line 11 to 20.***
     
-  2. ***In this script, you can change all the versions of your tools from line 11 to 20.***
+  2. ***In this script, you should change all the parameters of the tools based on your needs.***
     
-  3. ***In this script, you should change all the parameters of the tools based on your needs.***
+  3. ***All the quality control results in each step were put in the QC folder.***
