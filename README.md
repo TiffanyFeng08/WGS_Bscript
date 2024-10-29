@@ -40,25 +40,25 @@ flowchart TD
   #SBATCH -n 2
   ```
   
-  Provide the raw data directory
+  Provide the raw data directory at line 26
   
   ```
   raw_data_path=/path/to/your/raw/data
   ```
   
-  Define your working directory: where you want to put your results
+  Define your working directory at line 29: where you want to put your results
   
   ```
-  path=/path/to/your/working/directory/
+  working_path=/path/to/your/working/directory/
   ```
   
-  Define your primer path and file.
+  Define your primer path and file at line 32.
   
   ```
   primer_path=/path/to/your/primer/yourprimerfilename.fa
   ```
   
-  If your sequence does not end with " _R1_001.fastq.gz" or " _R2_001.fastq.gz", you also need to change the tag and format:
+  If your sequence does not end with " _R1_001.fastq.gz" or " _R2_001.fastq.gz", you also need to change the tag (at line 35 and 36) and format (at line 39):
   
   ```
   #Define the tag of your sequence
