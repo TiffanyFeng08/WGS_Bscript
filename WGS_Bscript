@@ -156,7 +156,7 @@ mkdir -p $path/Prokka
 cd $path/Assembly/Filtered_Contigs
 for x1 in *_filtered_contigs.fasta; do
     sampleName=${x1%%_filtered_contigs.fasta}
-    prokka -o $path/Prokka/${sampleName} ${sampleName}.fasta
+    prokka -o $path/Prokka/${sampleName} ${sampleName}_filtered_contigs.fasta
 done
 
 # Check Prokka results and count genes
