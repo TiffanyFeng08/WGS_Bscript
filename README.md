@@ -101,52 +101,52 @@ sbatch WGS_Bscript
 1. **Raw Reads Quality Control**:
   
   - **FastQC Results**: Quality control reports for raw reads.
-    - `$path/QC/Rawreads/FastQC_result`: Contains FastQC reports for raw reads.
+    - `$working_path/result/QC/Rawreads/FastQC_result`: Contains FastQC reports for raw reads.
 
 2. **Trimmed Reads**:
   
   - **Trimmed Paired-End Reads**: Trimmed paired-end reads after adapter removal and quality trimming.
-    - `$path/Trim/both_sequence`: Contains both paired and unpaired trimmed reads.
-    - `$path/Trim/trimmed_paired_sequence`: Contains only paired trimmed reads.
+    - `$working_path/result/Trim/both_sequence`: Contains both paired and unpaired trimmed reads.
+    - `$working_path/result/Trim/trimmed_paired_sequence`: Contains only paired trimmed reads.
 3. **Trimmed Reads Quality Control**:
   
   - **FastQC Results**: Quality control reports for trimmed reads.
-    - `$path/QC/TrimQC_result`: Contains FastQC reports for trimmed reads.
+    - `$working_path/result/QC/TrimQC_result`: Contains FastQC reports for trimmed reads.
       
 4. **SPAdes Assembly**:
   
   - **Assembly Results**: Assembled contigs from SPAdes.
-    - `$path/SPAdes/result`: Contains SPAdes assembly results for each sample.
-    - `$path/SPAdes/all_contigs`: Contains all contigs from the SPAdes assembly.
+    - `$working_path/result/SPAdes/result`: Contains SPAdes assembly results for each sample.
+    - `$working_path/result/SPAdes/all_contigs`: Contains all contigs from the SPAdes assembly.
       
 5. **Quality Assessment of Contigs**:
   
   - **Quast Results**: Quality assessment of assembled contigs using Quast.
-    - `$path/QC/Assembly/Quast/Contigs`: Contains Quast reports for the assembled contigs.
+    - `$working_path/result/QC/Assembly/Quast/Contigs`: Contains Quast reports for the assembled contigs.
       
 6. **Filtered Contigs**:
   
   - **Filtered Contigs**: Contigs filtered to remove those shorter than 1kb.
-    - `$path/Assembly/Filtered_Contigs`: Contains filtered contigs for each sample.
+    - `$working_path/result/Assembly/Filtered_Contigs`: Contains filtered contigs for each sample.
       
 7. **Quality Assessment of Filtered Contigs**:
   
   - **Quast Results**: Quality assessment of filtered contigs using Quast.
-    - `$path/QC/Assembly/Quast/Filtered_Contigs`: Contains Quast reports for the filtered contigs.
+    - `$working_path/result/QC/Assembly/Quast/Filtered_Contigs`: Contains Quast reports for the filtered contigs.
 8. **Coverage Calculation**:
   
   - **BBMap Results**: Coverage calculation and pileup reports using BBMap.
-    - `$path/QC/Assembly/BBmap`: Contains BAM files and pileup reports for each sample.
-    - `$path/QC/Assembly/BBmap/pileup_reports`: Contains individual pileup reports.
-    - `$path/QC/Assembly/BBmap/pileup_reports/pileup_summary.txt`: Combined summary of all pileup reports.
-    - '$path/QC/Assembly/BBmap/covstats_reports':Contains summary statistics of the coverage for the entire genome.
-    - '$path/QC/Assembly/BBmap/covstats_summary.txt': Contains the coverage statistics for all samples.
+    - `$working_path/result/QC/Assembly/BBmap`: Contains BAM files and pileup reports for each sample.
+    - `$working_path/result/QC/Assembly/BBmap/pileup_reports`: Contains individual pileup reports.
+    - `$working_path/result/QC/Assembly/BBmap/pileup_reports/pileup_summary.txt`: Combined summary of all pileup reports.
+    - '$working_path/result/QC/Assembly/BBmap/covstats_reports':Contains summary statistics of the coverage for the entire genome.
+    - '$working_path/result/QC/Assembly/BBmap/covstats_summary.txt': Contains the coverage statistics for all samples.
       
 9. **Annotation**:
   
   - **Prokka Results**: Annotation results using Prokka.
-    - `$path/Prokka`: Contains Prokka annotation results for each sample.
-    - `$path/QC/Prokka`: Contains a summary CSV file with counts of contigs, bases, CDS, tRNA, and tmRNA for each sample.
+    - `$working_path/result/Prokka`: Contains Prokka annotation results for each sample.
+    - `$working_path/result/QC/Prokka`: Contains a summary CSV file with counts of contigs, bases, CDS, tRNA, and tmRNA for each sample.
 
 ### Expected Output Files:
 
