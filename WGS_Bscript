@@ -1,0 +1,175 @@
+#!/bin/bash
+#SBATCH --account=the name of your account
+#SBATCH --time=48:00:00
+#SBATCH --job-name=the name of your job
+#SBATCH --output=%x-%j.out
+#SBATCH --mail-user=your email
+#SBATCH --mail-type=ALL
+#SBATCH --mem-per-cpu=186G  
+#SBATCH -n 2
+
+module load StdEnv/2020
+module load fastqc/0.12.0
+module load python/3.10.2
+module load trimmomatic/0.39
+module load gcc/9.3.0
+module load spades/3.15.4
+module load bbmap/38.86
+module load samtools/1.17
+module load quast/5.2.0
+module load prokka/1.14.5
+module load scipy-stack/2022a
+
+
+# Define your raw data directory
+
+raw_data_path=/path/to/your/raw/data
+
+# Define working directory
+working_path=/path/to/your/working/directory/
+
+# Define primer fasta file (it should be '.fa' or '.fasta' file)
+primer_path=/path/to/your/primer/yourprimerfilename.fa
+
+#Define the tag of your sequence
+tag1="_R1_001"
+tag2="_R2_001"
+
+#Define the format of your sequence
+fo=fastq.gz
+
+# Define result directory
+mkdir -p $working_path/result
+path=$working_path/result
+
+# Rename files to keep only the part before the first "_" as the sample name
+cd $raw_data_path
+find . -type f -name "*${tag1}.${fo}" -o -name "*${tag2}.${fo}" | while read file; do
+    base=$(basename "$file")
+    sampleName=$(echo "$base" | cut -d'_' -f1)
+    dir=$(dirname "$file")
+    if [[ "$file" == *${tag1}.${fo} ]]; then
+        mv "$file" "${dir}/${sampleName}${tag1}.${fo}"
+    elif [[ "$file" == *${tag2}.${fo} ]]; then
+        mv "$file" "${dir}/${sampleName}${tag2}.${fo}"
+    fi
+done
+
+# QC Conduct pre QC check
+mkdir -p $path/QC
+mkdir -p $path/QC/Rawreads
+mkdir -p $path/QC/Rawreads/FastQC_result
+
+cd  $raw_data_path
+fastqc $(find . -name "*.${fo}") -o $path/QC/Rawreads/FastQC_result
+
+
+#Trim data-mainly targeting trim the data score lower than 20 and trim adapters
+mkdir -p $path/Trim
+mkdir -p $path/Trim/both_sequence
+mkdir -p $path/Trim/trimmed_paired_sequence
+
+cd $raw_data_path
+find . -name "*${tag1}.${fo}" | while read x1; do
+    sampleName=$(basename ${x1%%${tag1}.${fo}})
+    x2=$(dirname "$x1")/${sampleName}${tag2}.${fo}
+    if [ -f "$x2" ]; then
+        java -jar $EBROOTTRIMMOMATIC/trimmomatic-0.39.jar PE "$x1" "$x2" \
+            $path/Trim/both_sequence/${sampleName}${tag1}_paired.${fo} \
+            $path/Trim/both_sequence/${sampleName}${tag1}_unpaired.${fo} \
+            $path/Trim/both_sequence/${sampleName}${tag2}_paired.${fo} \
+            $path/Trim/both_sequence/${sampleName}${tag2}_unpaired.${fo} \
+            ILLUMINACLIP:$primer_path:2:30:10 SLIDINGWINDOW:5:20 MINLEN:36
+    else
+        echo "Paired file for $x1 not found."
+    fi
+done
+
+#Collect all the Trimmomatic paired-end read and ready for QC and assembly
+
+cd $path/Trim/both_sequence
+mv *_paired.${fo} $path/Trim/trimmed_paired_sequence
+
+#QC Use all these sequence for QC check
+mkdir -p $path/QC/Trimmed_Reads/FastQC_result
+fastqc $path/Trim/trimmed_paired_sequence/*.${fo} -o $path/QC/Trimmed_Reads/FastQC_result
+
+
+#Use all these sequence for SPAdes assembly
+mkdir -p $path/Assembly/Contigs
+mkdir -p $path/Assembly/SPAdes_result
+
+cd $path/Trim/trimmed_paired_sequence
+for x1 in *${tag1}_paired.${fo}; do sampleName=${x1%%${tag1}_paired.${fo}}; spades.py -1 ${sampleName}${tag1}_paired.${fo} -2 ${sampleName}${tag2}_paired.${fo} -m 150 -o $path/Assembly/SPAdes_result/${sampleName} --isolate; done
+
+#Collect all the contigs into a folder
+cd $path/Assembly/SPAdes_result
+for subdir in *; do cp $path/Assembly/SPAdes_result/"$subdir"/contigs.fasta $path/Assembly/Contigs/"$subdir"_contigs.fasta; done
+
+#Use quast to test the quality:
+mkdir -p $path/QC/Assembly/Quast/Contigs
+cd $path/Assembly/Contigs
+quast *.fasta -o $path/QC/Assembly/Quast/Contigs -t 1
+
+#Remove all the contigs lower than 1kb
+mkdir -p $path/Assembly/Filtered_Contigs
+cd $path/Assembly/Contigs
+for x1 in *_contigs.fasta; do sampleName=${x1%%_contigs.fasta}; reformat.sh in=${sampleName}_contigs.fasta out=$path/Assembly/Filtered_Contigs/${sampleName}_filtered_contigs.fasta minlength=1000;done
+
+#Use quast to test the quality
+mkdir -p $path/QC/Assembly/Quast/Filtered_Contigs
+cd $path/Assembly/Filtered_Contigs
+quast *.fasta -o $path/QC/Assembly/Quast/Filtered_Contigs -t 1
+
+# Run bbmap to calculate and collect coverage
+# No need to copy raw data, directly compare trimmed raw reads with filtered contigs
+cd $path
+mkdir -p $path/QC/Assembly/BBmap
+
+cd $path/Trim/trimmed_paired_sequence
+for x1 in *${tag1}_paired.${fo}; do
+    sampleName=${x1%%${tag1}_paired.${fo}}
+        bbmap.sh in1=${sampleName}${tag1}_paired.${fo} in2=${sampleName}${tag2}_paired.${fo} ref=$path/Assembly/Filtered_Contigs/${sampleName}_filtered_contigs.fasta usejni=t out=$path/QC/Assembly/BBmap/${sampleName}_mapped.bam
+        pileup.sh in=$path/QC/Assembly/BBmap/${sampleName}_mapped.bam out=$path/QC/Assembly/BBmap/${sampleName}_pileup.txt covstats=$path/QC/Assembly/BBmap/${sampleName}_covstats.txt
+done
+
+# Collect coverage statistics
+mkdir -p $path/QC/Assembly/BBmap/covstats_reports
+cd $path/QC/Assembly/BBmap
+for file in *_covstats.txt; do
+    mv "$file" $path/QC/Assembly/BBmap/covstats_reports
+done
+
+# Combine coverage statistics into a single summary file
+cd $path/QC/Assembly/BBmap/covstats_reports
+# Extract headers from the first file
+head -n 1 $(ls *_covstats.txt | head -n 1) > $path/QC/Assembly/BBmap/covstats_summary.txt
+# Append data from all files, skipping headers
+for file in *_covstats.txt; do
+    tail -n +2 "$file" >> $path/QC/Assembly/BBmap/covstats_summary.txt
+done
+
+
+# Use prokka to finish annotation
+# Make a directory for prokka results
+mkdir -p $path/Prokka
+cd $path/Assembly/Filtered_Contigs
+for x1 in *_filtered_contigs.fasta; do
+    sampleName=${x1%%_filtered_contigs.fasta}
+    prokka -o $path/Prokka/${sampleName} ${sampleName}.fasta
+done
+
+# Check Prokka results and count genes
+cd $path/Prokka
+mkdir -p $path/QC/Prokka
+echo "SampleName,Contigs,Bases,CDS,tRNA,tmRNA" > $path/QC/Prokka/Prokka_summary.csv
+for dir in */; do
+    sampleName=$(basename ${dir})
+    contigs=$(grep -m 1 "contigs" ${dir}/*.txt | awk '{print $2}')
+    bases=$(grep -m 1 "bases" ${dir}/*.txt | awk '{print $2}')
+    cds_count=$(grep -m 1 "CDS" ${dir}/*.txt | awk '{print $2}')
+    trna_count=$(grep -m 1 "tRNA" ${dir}/*.txt | awk '{print $2}')
+    tmrna_count=$(grep -m 1 "tmRNA" ${dir}/*.txt | awk '{print $2}')
+    echo "${sampleName},${contigs},${bases},${cds_count},${trna_count},${tmrna_count}" >> $path/QC/Prokka/Prokka_summary.csv
+done
+
