@@ -139,6 +139,8 @@ sbatch WGS_Bscript
     - `$path/QC/Assembly/BBmap`: Contains BAM files and pileup reports for each sample.
     - `$path/QC/Assembly/BBmap/pileup_reports`: Contains individual pileup reports.
     - `$path/QC/Assembly/BBmap/pileup_reports/pileup_summary.txt`: Combined summary of all pileup reports.
+    - '$path/QC/Assembly/BBmap/covstats_reports':Contains summary statistics of the coverage for the entire genome.
+    - '$path/QC/Assembly/BBmap/covstats_summary.txt': Contains the coverage statistics for all samples.
       
 9. **Annotation**:
   
