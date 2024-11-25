@@ -1,0 +1,26 @@
+# This CITATION.cff file was generated with cffinit.
+# Visit https://bit.ly/cffinit to generate yours today!
+
+cff-version: 1.2.0
+title: WGS_Bscript
+message: >-
+  If you use this software, please cite it using the
+  metadata from this file.
+type: software
+authors:
+  - given-names: 'Zhixuan '
+    family-names: Feng
+url: 'https://github.com/TiffanyFeng08/WGS_Bscript/tree/main'
+abstract: >-
+  This bash script is prepared for whole genome sequencing
+  data analysis on the Compute Canada server. The target is
+  to use only the tools in the Compute Canada module without
+  installing extra libraries or tools and create a simple
+  workflow for paired-end short-read sequence analysis,
+  including QC, trimming, assembly, and annotation. The test
+  was conducted in the Compute Canada Beluga Cluster. (The
+  head of the scripts might be differ from different
+  cluster, e.g. Niagara Cluster)
+license: MIT
+version: 1.0.0
+date-released: '2024-10-29'
