@@ -23,4 +23,5 @@ abstract: >-
   cluster, e.g. Niagara Cluster)
 license: MIT
 version: 1.0.0
+doi:10.5281/zenodo.14860248
 date-released: '2024-10-29'
