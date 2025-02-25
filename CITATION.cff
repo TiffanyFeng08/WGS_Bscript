@@ -10,6 +10,9 @@ type: software
 authors:
   - given-names: 'Zhixuan '
     family-names: Feng
+identifiers:
+  - type: doi
+    value: 10.5281/zenodo.14860248
 url: 'https://github.com/TiffanyFeng08/WGS_Bscript/tree/main'
 abstract: >-
   This bash script is prepared for whole genome sequencing
@@ -22,6 +25,5 @@ abstract: >-
   head of the scripts might be differ from different
   cluster, e.g. Niagara Cluster)
 license: MIT
-version: 1.0.0
-[![DOI](https://zenodo.org/badge/876783148.svg)](https://doi.org/10.5281/zenodo.14860247)
-date-released: '2024-10-29'
+version: 1.0.1
+date-released: '2025-02-11'
